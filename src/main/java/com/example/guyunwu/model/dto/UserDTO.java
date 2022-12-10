@@ -11,7 +11,7 @@ public class UserDTO {
 
     private Integer gender;
 
-    private String phoneNumber;
+    private String avatar;
 
     private Date birthDate;
 }

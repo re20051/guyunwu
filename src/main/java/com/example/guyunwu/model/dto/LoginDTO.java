@@ -10,7 +10,7 @@ public class LoginDTO {
 
     private Integer gender;
 
-    private String phoneNumber;
+    private String avatar;
 
     private Date birthDate;
 
