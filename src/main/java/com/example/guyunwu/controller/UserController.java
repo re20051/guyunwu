@@ -1,5 +1,6 @@
 package com.example.guyunwu.controller;
 
+import com.example.guyunwu.model.entity.User;
 import com.example.guyunwu.model.param.RegisterParam;
 import com.example.guyunwu.model.response.Result;
 import com.example.guyunwu.service.UserService;
@@ -20,8 +21,8 @@ public class UserController {
     @ApiOperation("注册新用户")
     @PostMapping(value = "/register")
     public Result register(@RequestBody @Validated RegisterParam registerParam) {
-
-        return Result.ok();
+        User user = userService.register(registerParam);
+        return Result.ok("ok", user);
     }
 
     @ApiOperation("更新用户信息")
@@ -30,6 +31,4 @@ public class UserController {
 
         return Result.ok();
     }
-
-
 }
