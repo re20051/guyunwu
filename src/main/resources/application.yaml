@@ -1,0 +1,42 @@
+server:
+  port: 8080
+  servlet:
+    session:
+      timeout: 24h
+      cookie:
+        max-age: 12h
+        http-only: false
+
+logging:
+  file:
+    path: log
+  logback:
+    rollingpolicy:
+      max-history: 30
+#  level:
+#    org.hibernate.type.descriptor.sql.BasicBinder: trace
+
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  datasource:
+    url: jdbc:mysql://${mysql-host:localhost}:3306/guyunwu?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: ${mysql-username:root}
+    password: ${mysql-password:root}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      validation-query: SELECT 1 FROM DUAL
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 50MB
+  data:
+    redis:
+      repositories:
+        enabled: false
