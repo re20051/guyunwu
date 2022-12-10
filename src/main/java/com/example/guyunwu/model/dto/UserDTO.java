@@ -7,8 +7,6 @@ import java.util.Date;
 @Data
 public class UserDTO {
 
-    private Long id;
-
     private String username;
 
     private Integer gender;

@@ -6,8 +6,6 @@ import java.util.Date;
 @Data
 public class LoginDTO {
 
-    private Long id;
-
     private String username;
 
     private Integer gender;
