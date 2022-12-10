@@ -1,6 +1,7 @@
 package com.example.guyunwu.model.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -15,10 +16,14 @@ import javax.persistence.*;
 @Entity(name = "article")
 public class Article implements Serializable {
 
+    public static final String CATEGORY_EXPLORE = "explore";
+
+    public static final String CATEGORY_LECTURE = "lecture";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "article_id")
-    private Integer id;
+    private Long id;
 
     @Column(name = "cover_image")
     private String coverImage;
@@ -27,18 +32,20 @@ public class Article implements Serializable {
     private String title;
 
     @Column(name = "user_id")
-    private Integer userId;
+    private Long userId;
 
+    @Lob
     @Column(name = "content")
     private String content;
 
     @Column(name = "summary")
     private String summary;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "publish_date")
-    private LocalDateTime publishDate;
+    private Date publishDate;
 
-    @Column(name = "reads")
+    @Column(name = "`reads`")
     private Long reads;
 
     @Column(name = "category")

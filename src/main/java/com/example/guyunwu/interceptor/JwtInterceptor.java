@@ -6,8 +6,10 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.guyunwu.exception.BadRequestException;
 import com.example.guyunwu.utils.JwtUtil;
+import com.example.guyunwu.utils.SecurityUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +28,8 @@ public class JwtInterceptor implements HandlerInterceptor {
             throw new BadRequestException("未登录");
         }
         try {
-            JwtUtil.verify(token);
+            DecodedJWT j = JwtUtil.verify(token);
+            SecurityUtil.setCurrentUserId(j.getClaim("id").asLong());
             return true;
         } catch (SignatureVerificationException e) {
             throw new BadRequestException("无效签名");
@@ -39,5 +42,10 @@ public class JwtInterceptor implements HandlerInterceptor {
         } catch (Exception e) {
             throw new BadRequestException("token无效");
         }
+    }
+
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        SecurityUtil.removeCurrentUser();
     }
 }
