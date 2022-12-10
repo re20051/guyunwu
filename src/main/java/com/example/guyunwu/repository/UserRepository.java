@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends BaseRepository<User, Long>, JpaSpecificationExecutor<User> {
 
     int countByPhoneNumber(String phoneNumber);
+
+    User findByPhoneNumber(String phoneNumber);
 }

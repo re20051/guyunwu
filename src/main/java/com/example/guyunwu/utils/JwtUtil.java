@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.guyunwu.model.entity.User;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Calendar;
 
 public class JwtUtil {
@@ -27,5 +28,11 @@ public class JwtUtil {
 
     public static DecodedJWT verify(String token) {
         return JWT.require(Algorithm.HMAC256(SING)).build().verify(token);
+    }
+
+    public static Long getUserId(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        final DecodedJWT verify = JwtUtil.verify(token);
+        return verify.getClaim("id").asLong();
     }
 }
