@@ -7,9 +7,9 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotBlank;
 
 @Data
-public class AddPostParam {
+public class AddArticleParam {
 
-    private User user;
+    private Long userId;
 
     @Length(max = 1023, message = "标题不能超过127个字符")
     @NotBlank(message = "标题不能为空")
