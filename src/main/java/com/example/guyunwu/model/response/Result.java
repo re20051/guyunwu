@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @ApiModel(value = "全局统一返回结果")
 public class Result<T> {
 
-    private Integer code;
+    private Integer status;
     private String message;
     private T data;
 
