@@ -34,6 +34,7 @@ public class ArticleController {
     private ArticleDTO toDto(Article article){
         ArticleDTO articleDTO = new ArticleDTO();
         BeanUtils.copyProperties(article, articleDTO);
+        articleDTO.setLikes(articleRepository.countArticleLikesById(article.getId()));
         userRepository.findById(article.getUserId()).ifPresent(user1 -> {
             UserDTO userDTO = new UserDTO();
             BeanUtils.copyProperties(user1, userDTO);
@@ -49,6 +50,7 @@ public class ArticleController {
         if(article == null){
             return Result.error("文章不存在");
         }
+        articleRepository.updateReadsById(id);
         return Result.ok("ok", toDto(article));
     }
 
@@ -88,15 +90,22 @@ public class ArticleController {
 
     @ApiOperation("获取是否赞过帖子")
     @GetMapping("/like/{id:\\d+}")
-    public Result getLikeArticle(@PathVariable Long id) {
-
-        return Result.ok();
+    public Result<Boolean> getLikeArticle(@PathVariable Long id) {
+        Long userId = SecurityUtil.getCurrentUserId();
+        int res = articleRepository.getArticleLike(userId, id);
+        return Result.ok("ok", res > 0);
     }
 
     @ApiOperation("点赞帖子")
     @PostMapping("/like/{id:\\d+}")
-    public Result doLikeArticle(@PathVariable Long id) {
-
-        return Result.ok();
+    public Result<Boolean> doLikeArticle(@PathVariable Long id) {
+        Long userId = SecurityUtil.getCurrentUserId();
+        int res = articleRepository.getArticleLike(userId, id);
+        if(res > 0){
+            articleRepository.deleteArticleLike(userId, id);
+        }else{
+            articleRepository.insertArticleLike(userId, id);
+        }
+        return Result.ok("ok", res <= 0);
     }
 }
