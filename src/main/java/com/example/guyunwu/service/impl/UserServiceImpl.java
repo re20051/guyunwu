@@ -29,6 +29,7 @@ public class UserServiceImpl extends AbstractCrudService<User, Long> implements 
 
     /**
      * 注册用户
+     *
      * @param param
      * @return
      */
@@ -44,12 +45,11 @@ public class UserServiceImpl extends AbstractCrudService<User, Long> implements 
     }
 
 
-
     @Override
     public User login(LoginParam loginParam) {
         String encryptPassword = MD5Util.getMd5Code(loginParam.getPassword());
         User user = userRepository.findByPhoneNumber(loginParam.getPhoneNumber());
-        if(user == null || !user.getPassword().equals(encryptPassword)) {
+        if (user == null || !user.getPassword().equals(encryptPassword)) {
             throw new BadRequestException("手机号或者密码错误");
         }
         return user;
@@ -57,18 +57,13 @@ public class UserServiceImpl extends AbstractCrudService<User, Long> implements 
 
     @Override
     public User update(UpdateUserParam updateUserParam, Long userId) {
-        User user = new User();
-        BeanUtils.copyProperties(updateUserParam, user);
-        user.setId(userId);
-        try {
-            return userRepository.save(user);
-        } catch (DataIntegrityViolationException e){
-            Throwable t = e.getCause().getCause();
-            if(t instanceof SQLIntegrityConstraintViolationException){
-                throw new BadRequestException(t.getMessage());
-            }
-            throw new BadRequestException(e.getMessage());
+        User user = userRepository.findById(userId).orElse(null);
+        if(user == null) {
+            throw new RuntimeException("用户不存在");
         }
+        BeanUtils.copyProperties(updateUserParam, user);
+        userRepository.save(user);
+        return user;
     }
 
 

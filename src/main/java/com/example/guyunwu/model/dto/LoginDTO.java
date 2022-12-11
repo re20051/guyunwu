@@ -12,6 +12,8 @@ public class LoginDTO {
 
     private String avatar;
 
+    private String phoneNumber;
+
     private Date birthDate;
 
     private String token;

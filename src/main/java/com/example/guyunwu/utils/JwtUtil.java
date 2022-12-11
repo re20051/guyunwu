@@ -32,6 +32,7 @@ public class JwtUtil {
 
     public static Long getUserId(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
+        token = token == null ? null : token.replace("Bearer ", "");
         final DecodedJWT verify = JwtUtil.verify(token);
         return verify.getClaim("id").asLong();
     }

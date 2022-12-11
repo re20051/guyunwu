@@ -19,6 +19,5 @@ public class UpdateUserParam {
     @NotNull(message = "性别不能为空")
     private Integer gender;
 
-    @NotNull(message = "生日不能为空")
-    private Date birthDay;
+    private Date birthDate;
 }

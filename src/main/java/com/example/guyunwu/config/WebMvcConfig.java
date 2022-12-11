@@ -27,6 +27,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         List<String> urls = new ArrayList<>();
         urls.add("/**/login/**");
         urls.add("/**/register/**");
+        urls.add("/**/schedule/**");
         urls.add("/swagger-ui/**");
         urls.add("/swagger-resources/**");
         urls.add("/swagger-resources/**");
