@@ -31,9 +31,30 @@ public class ArticleController {
 
     private final UserRepository userRepository;
 
+    private ArticleDTO toDto(Article article){
+        ArticleDTO articleDTO = new ArticleDTO();
+        BeanUtils.copyProperties(article, articleDTO);
+        userRepository.findById(article.getUserId()).ifPresent(user1 -> {
+            UserDTO userDTO = new UserDTO();
+            BeanUtils.copyProperties(user1, userDTO);
+            articleDTO.setAuthor(userDTO);
+        });
+        return articleDTO;
+    }
+
+    @ApiOperation("查询文章详情")
+    @GetMapping("/{id:\\d+}")
+    public Result<ArticleDTO> getArticle(@PathVariable Long id){
+        Article article = articleRepository.findById(id).orElse(null);
+        if(article == null){
+            return Result.error("文章不存在");
+        }
+        return Result.ok("ok", toDto(article));
+    }
+
     @ApiOperation("获取帖子")
     @GetMapping("/list")
-    public Result<List<ArticleDTO>> getArticle(ListArticleParam param){
+    public Result<List<ArticleDTO>> listArticle(ListArticleParam param){
         Specification<Article> specification = (root, criteriaQuery, criteriaBuilder) -> {
             return criteriaBuilder.and(
                     criteriaBuilder.equal(root.get("category"), param.getCategory())
@@ -42,16 +63,7 @@ public class ArticleController {
         PageRequest pageRequest = PageRequest.of(param.getPage(), param.getSize());
 
         List<Article> articles = articleRepository.findAll(specification, pageRequest).getContent();
-        List<ArticleDTO> res = articles.stream().map(article -> {
-            ArticleDTO articleDTO = new ArticleDTO();
-            BeanUtils.copyProperties(article, articleDTO);
-            userRepository.findById(article.getUserId()).ifPresent(user1 -> {
-                UserDTO userDTO = new UserDTO();
-                BeanUtils.copyProperties(user1, userDTO);
-                articleDTO.setAuthor(userDTO);
-            });
-            return articleDTO;
-        }).collect(Collectors.toList());
+        List<ArticleDTO> res = articles.stream().map(this::toDto).collect(Collectors.toList());
 
         return Result.ok("ok", res);
     }
@@ -74,9 +86,16 @@ public class ArticleController {
         return Result.ok();
     }
 
+    @ApiOperation("获取是否赞过帖子")
+    @GetMapping("/like/{id:\\d+}")
+    public Result getLikeArticle(@PathVariable Long id) {
+
+        return Result.ok();
+    }
+
     @ApiOperation("点赞帖子")
-    @PostMapping(value = "/like")
-    public Result doLikeArticle() {
+    @PostMapping("/like/{id:\\d+}")
+    public Result doLikeArticle(@PathVariable Long id) {
 
         return Result.ok();
     }

@@ -1,5 +1,5 @@
 package com.example.guyunwu.model.param;
-import com.example.guyunwu.model.entity.User;
+
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
