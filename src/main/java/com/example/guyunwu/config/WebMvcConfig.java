@@ -1,6 +1,6 @@
 package com.example.guyunwu.config;
 
-import com.example.guyunwu.interceptor.JwtInterceptor;
+import com.example.guyunwu.model.interceptor.JwtInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -27,7 +27,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         List<String> urls = new ArrayList<>();
         urls.add("/**/login/**");
         urls.add("/**/register/**");
-        urls.add("/**/schedule/**");
+        urls.add("/**/learn/**");
         urls.add("/swagger-ui/**");
         urls.add("/swagger-resources/**");
         urls.add("/swagger-resources/**");

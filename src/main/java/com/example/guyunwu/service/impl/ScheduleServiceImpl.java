@@ -8,7 +8,6 @@ import com.example.guyunwu.repository.ScheudleRepository;
 import com.example.guyunwu.service.ScheduleService;
 import com.example.guyunwu.service.base.AbstractCrudService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 

@@ -1,4 +1,4 @@
-package com.example.guyunwu.interceptor;
+package com.example.guyunwu.model.interceptor;
 
 import com.auth0.jwt.exceptions.AlgorithmMismatchException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;

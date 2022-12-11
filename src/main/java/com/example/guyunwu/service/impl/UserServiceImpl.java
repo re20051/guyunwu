@@ -11,11 +11,9 @@ import com.example.guyunwu.service.UserService;
 import com.example.guyunwu.service.base.AbstractCrudService;
 import com.example.guyunwu.utils.MD5Util;
 import org.springframework.beans.BeanUtils;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 
 @Service
 public class UserServiceImpl extends AbstractCrudService<User, Long> implements UserService {
