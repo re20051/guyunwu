@@ -9,7 +9,4 @@ public class AddScheduleParam {
 
     @NotNull
     private Long bookId;
-
-    @NotNull
-    private Integer wordsPerDay;
 }

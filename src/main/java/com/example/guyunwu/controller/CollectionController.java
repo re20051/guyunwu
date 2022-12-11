@@ -1,9 +1,12 @@
 package com.example.guyunwu.controller;
 
+import com.example.guyunwu.model.entity.Book;
 import com.example.guyunwu.model.entity.DailySentence;
+import com.example.guyunwu.model.entity.Word;
 import com.example.guyunwu.model.response.Result;
 import com.example.guyunwu.repository.DailySentenceRepository;
 import com.example.guyunwu.service.CollectionService;
+import com.example.guyunwu.utils.SecurityUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -47,22 +50,16 @@ public class CollectionController {
     @ApiOperation("我的图书")
     @GetMapping(value = "/book/my")
     public Result getMyBooks() {
-
-        return Result.ok();
+        Long userId = SecurityUtil.getCurrentUserId();
+        List<Book> myBooks = collectionService.getMyBooks(userId);
+        return Result.ok("ok", myBooks);
     }
 
-    @ApiOperation("添加书籍")
-    @GetMapping(value = "/book/collect")
-    public Result collectBook(@PathVariable Integer bookId) {
-
-        return Result.ok();
-    }
-
-    @ApiOperation("取消收藏")
-    @DeleteMapping(value = "/book/cancel")
-    public Result cancelBook(@PathVariable Integer bookId) {
-
-        return Result.ok();
+    @ApiOperation("所有图书")
+    @GetMapping(value = "/book/all")
+    public Result getAllBooks() {
+        List<Book> myBooks = collectionService.getAllBooks();
+        return Result.ok("ok", myBooks);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////
@@ -70,22 +67,27 @@ public class CollectionController {
     @ApiOperation("我的收藏实词")
     @GetMapping(value = "/word/my")
     public Result getMyWords() {
+        Long userId = 4L;
+        List<Word> words = collectionService.getMyWords(userId);
 
         return Result.ok();
     }
 
     @ApiOperation("收藏实词")
-    @GetMapping(value = "/word/collect")
-    public Result collectWord(@PathVariable Integer wordId) {
-
+    @PostMapping(value = "/word/{wordId:\\d+}")
+    public Result collectWord(@PathVariable Long wordId) {
+//        Long userId = SecurityUtil.getCurrentUserId();
+        Long userId = 4L;
+        collectionService.collectWord(wordId, userId);
         return Result.ok();
     }
 
     @ApiOperation("取消收藏")
-    @DeleteMapping(value = "/word/cancel")
-    public Result cancelWord(@PathVariable Integer wordId) {
-
+    @DeleteMapping(value = "/word/cancel/{wordId:\\d+}")
+    public Result cancelWord(@PathVariable Long wordId) {
+        //        Long userId = SecurityUtil.getCurrentUserId();
+        Long userId = 4L;
+        collectionService.cancelWord(wordId, userId);
         return Result.ok();
     }
-
 }

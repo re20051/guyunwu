@@ -69,12 +69,6 @@ public abstract class AbstractCrudService<ENTITY, ID> implements CrudService<ENT
     }
 
     @Override
-    public long deleteByIdIn(Collection<ID> ids) {
-        Assert.notNull(ids, "Ids must not be null");
-        return repository.deleteByIdIn(ids);
-    }
-
-    @Override
     public ENTITY deleteById(ID id) {
         Assert.notNull(id, "Id must not be null");
         ENTITY entity = getNotNullById(id);

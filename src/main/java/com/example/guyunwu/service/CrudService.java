@@ -22,7 +22,5 @@ public interface CrudService<ENTITY, ID> {
 
     ENTITY deleteById(ID id);
 
-    long deleteByIdIn(Collection<ID> ids);
-
     long count();
 }

@@ -1,5 +1,6 @@
 package com.example.guyunwu.service;
 
+import com.example.guyunwu.model.entity.Schedule;
 import com.example.guyunwu.model.param.AddScheduleParam;
 import com.example.guyunwu.model.param.UpdateScheduleParam;
 
@@ -8,11 +9,9 @@ public interface ScheduleService {
 
     void add(AddScheduleParam addScheduleParam, Long userId);
 
-    void switchSchedule(Long scheduleId, Long userId);
+    void switchSchedule(Long bookId, Long userId);
 
-    void delete(Long scheduleId, Long userId);
+    Schedule reset(Long userId);
 
-    void reset(Long userId);
-
-
+    Schedule getCurrentSchedule(Long userId);
 }
