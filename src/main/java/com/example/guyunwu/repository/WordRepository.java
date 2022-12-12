@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Repository
 public interface WordRepository extends BaseRepository<Word, Long>, JpaSpecificationExecutor<Word> {
 
@@ -18,4 +20,7 @@ public interface WordRepository extends BaseRepository<Word, Long>, JpaSpecifica
     @Modifying
     @Query(value = "delete from word_collection where word_id = ?1 and user_id = ?2", nativeQuery = true)
     void cancelWord(Long wordId, Long userId);
+
+
+    List<Word> getAllByBookId(Long bookId);
 }

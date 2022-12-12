@@ -16,4 +16,13 @@ public interface CollectionService {
     List<Book> getMyBooks(Long userId);
 
     List<Book> getAllBooks();
+
+    List<Word> getWordsByBookId(Long bookId);
+
+    /**
+     * 通过id获得book
+     * @param bookId
+     * @return
+     */
+    Book getBookById(Long bookId);
 }

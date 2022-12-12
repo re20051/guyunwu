@@ -38,7 +38,7 @@ public class UserController {
 
     @ApiOperation("登录")
     @PostMapping(value = "/login")
-    public Result login(@RequestBody @Validated LoginParam loginParam, HttpServletRequest request) {
+    public Result<LoginDTO> login(@RequestBody @Validated LoginParam loginParam, HttpServletRequest request) {
         User user = userService.login(loginParam);
         LoginDTO loginDTO = new LoginDTO();
         BeanUtils.copyProperties(user, loginDTO);

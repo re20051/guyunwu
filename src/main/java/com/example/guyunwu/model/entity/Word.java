@@ -25,19 +25,19 @@ public class Word {
     private String content;
 
     @Column(name = "answer_a", nullable = false)
-    private Integer answerA;
+    private String answerA;
 
     @Column(name = "answer_b", nullable = false)
-    private Integer answerB;
+    private String answerB;
 
     @Column(name = "answer_c", nullable = false)
-    private Integer answerC;
+    private String answerC;
 
     @Column(name = "answer_d", nullable = false)
-    private Integer answerD;
+    private String answerD;
 
     @Column(name = "correct_answer", nullable = false)
-    private Integer correctAnswer;
+    private String correctAnswer;
 
     @Column(name = "key_word", columnDefinition = "varchar(63)", nullable = false)
     private String keyWord;

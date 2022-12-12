@@ -11,6 +11,7 @@ import com.example.guyunwu.repository.UserRepository;
 import com.example.guyunwu.utils.SecurityUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/comment")
+@Slf4j
 public class CommentController {
 
     private final CommentRepository commentRepository;

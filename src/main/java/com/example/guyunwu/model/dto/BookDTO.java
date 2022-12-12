@@ -5,14 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookDTO {
+public class BookDTO implements Serializable {
 
     private Long id;
 
-    private AuthorDTO authorDTO;
+    private AuthorDTO author;
 
     private String name;
 

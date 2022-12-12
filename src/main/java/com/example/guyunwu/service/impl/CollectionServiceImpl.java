@@ -50,12 +50,21 @@ public class CollectionServiceImpl extends AbstractCrudService<Word, Long> imple
 
     @Override
     public List<Book> getMyBooks(Long userId) {
-        List<Book> books = bookRepository.getMyBooks(userId);
-        return books;
+        return bookRepository.getMyBooks(userId);
     }
 
     @Override
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
+    }
+
+    @Override
+    public List<Word> getWordsByBookId(Long bookId) {
+        return wordRepository.getAllByBookId(bookId);
+    }
+
+    @Override
+    public Book getBookById(Long bookId) {
+        return bookRepository.getById(bookId);
     }
 }

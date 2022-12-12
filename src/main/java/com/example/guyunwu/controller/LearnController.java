@@ -1,20 +1,25 @@
 package com.example.guyunwu.controller;
 
+import com.example.guyunwu.model.dto.ScheduleDTO;
 import com.example.guyunwu.model.entity.Schedule;
+import com.example.guyunwu.model.entity.ScheduleRecord;
 import com.example.guyunwu.model.response.Result;
 import com.example.guyunwu.service.ClockService;
 import com.example.guyunwu.service.LearnService;
 import com.example.guyunwu.service.ScheduleService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.Date;
+import java.util.List;
 
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/collection")
+@Slf4j
 public class LearnController {
 
     @Autowired

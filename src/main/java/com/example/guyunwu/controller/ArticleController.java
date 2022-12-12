@@ -2,7 +2,6 @@ package com.example.guyunwu.controller;
 
 import com.example.guyunwu.model.dto.UserDTO;
 import com.example.guyunwu.model.entity.Article;
-import com.example.guyunwu.model.entity.User;
 import com.example.guyunwu.model.param.AddArticleParam;
 import com.example.guyunwu.model.param.ListArticleParam;
 import com.example.guyunwu.model.dto.ArticleDTO;
@@ -12,6 +11,7 @@ import com.example.guyunwu.repository.UserRepository;
 import com.example.guyunwu.utils.SecurityUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/article")
+@Slf4j
 public class ArticleController {
 
     private final ArticleRepository articleRepository;

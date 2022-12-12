@@ -3,17 +3,19 @@ package com.example.guyunwu.controller;
 import com.example.guyunwu.model.dto.ArticleDTO;
 import com.example.guyunwu.model.dto.AuthorDTO;
 import com.example.guyunwu.model.dto.BookDTO;
-import com.example.guyunwu.model.entity.Author;
-import com.example.guyunwu.model.entity.Book;
-import com.example.guyunwu.model.entity.DailySentence;
-import com.example.guyunwu.model.entity.Word;
+import com.example.guyunwu.model.entity.*;
 import com.example.guyunwu.model.response.Result;
 import com.example.guyunwu.repository.DailySentenceRepository;
 import com.example.guyunwu.service.AuthorService;
 import com.example.guyunwu.service.CollectionService;
+import com.example.guyunwu.service.ScheduleService;
 import com.example.guyunwu.utils.SecurityUtil;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,11 +34,14 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/collection")
 @RequiredArgsConstructor
+@Slf4j
 public class CollectionController {
 
     private final CollectionService collectionService;
 
     private final AuthorService authorService;
+
+    private final ScheduleService scheduleService;
 
     private final DailySentenceRepository dailySentenceRepository;
 
@@ -58,19 +63,30 @@ public class CollectionController {
 
     @ApiOperation("我的图书")
     @GetMapping(value = "/book/my")
-    public Result getMyBooks() {
+    public Result<List<BookDTO>> getMyBooks() {
         Long userId = SecurityUtil.getCurrentUserId();
+        log.info(userId.toString());
         List<Book> myBooks = collectionService.getMyBooks(userId);
+        log.info(myBooks.toString());
         List<BookDTO> res = myBooks.stream().map(this::toBookDto).collect(Collectors.toList());
+        log.info(res.toString());
         return Result.ok("ok", res);
     }
 
     @ApiOperation("所有图书")
     @GetMapping(value = "/book/all")
-    public Result getAllBooks() {
+    public Result<List<BookDTO>> getAllBooks() {
         List<Book> myBooks = collectionService.getAllBooks();
         List<BookDTO> res = myBooks.stream().map(this::toBookDto).collect(Collectors.toList());
         return Result.ok("ok", res);
+    }
+
+    @ApiOperation("是否已添加书本")
+    @GetMapping(value = "/hasBook/{bookId:\\d+}")
+    public Result<Boolean> getHasBook(@PathVariable Long bookId) {
+        Long userId = SecurityUtil.getCurrentUserId();
+        boolean has = scheduleService.existsSchedule(bookId, userId);
+        return Result.ok("ok", has);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////
@@ -108,7 +124,7 @@ public class CollectionController {
         Author author = authorService.getAuthor(book.getAuthorId());
         AuthorDTO authorDTO = new AuthorDTO();
         BeanUtils.copyProperties(author, authorDTO);
-        bookDTO.setAuthorDTO(authorDTO);
+        bookDTO.setAuthor(authorDTO);
         return bookDTO;
     }
 }
