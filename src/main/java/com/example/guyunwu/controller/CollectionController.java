@@ -66,11 +66,8 @@ public class CollectionController {
     @GetMapping(value = "/book/my")
     public Result<List<BookDTO>> getMyBooks() {
         Long userId = SecurityUtil.getCurrentUserId();
-        log.info(userId.toString());
         List<Book> myBooks = collectionService.getMyBooks(userId);
-        log.info(myBooks.toString());
         List<BookDTO> res = myBooks.stream().map(this::toBookDto).collect(Collectors.toList());
-        log.info(res.toString());
         return Result.ok("ok", res);
     }
 
@@ -104,8 +101,7 @@ public class CollectionController {
     @ApiOperation("收藏实词")
     @PostMapping(value = "/word/{wordId:\\d+}")
     public Result collectWord(@PathVariable Long wordId) {
-//        Long userId = SecurityUtil.getCurrentUserId();
-        Long userId = 4L;
+        Long userId = SecurityUtil.getCurrentUserId();
         collectionService.collectWord(wordId, userId);
         return Result.ok();
     }
@@ -113,10 +109,17 @@ public class CollectionController {
     @ApiOperation("取消收藏")
     @DeleteMapping(value = "/word/cancel/{wordId:\\d+}")
     public Result cancelWord(@PathVariable Long wordId) {
-        //        Long userId = SecurityUtil.getCurrentUserId();
-        Long userId = 4L;
+        Long userId = SecurityUtil.getCurrentUserId();
         collectionService.cancelWord(wordId, userId);
         return Result.ok();
+    }
+
+    @ApiOperation("判断一个实词是否已经被收藏")
+    @DeleteMapping(value = "/word/isCollected/{wordId:\\d+}")
+    public Result<Boolean> isCollected(@PathVariable Long wordId) {
+        Long userId = SecurityUtil.getCurrentUserId();
+        Boolean result = collectionService.isCollected(wordId, userId);
+        return Result.ok("ok", result);
     }
 
     public BookDTO toBookDto(Book book) {

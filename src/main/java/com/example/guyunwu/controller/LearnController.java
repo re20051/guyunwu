@@ -1,6 +1,7 @@
 package com.example.guyunwu.controller;
 
 import com.example.guyunwu.model.dto.BookDTO;
+import com.example.guyunwu.model.dto.LRDTO;
 import com.example.guyunwu.model.dto.TodayDTO;
 import com.example.guyunwu.model.dto.WordDTO;
 import com.example.guyunwu.model.entity.Book;
@@ -17,7 +18,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,17 +32,13 @@ import java.util.List;
 @Slf4j
 public class LearnController {
 
-    @Autowired
-    private LearnService learnService;
+    private final LearnService learnService;
 
-    @Autowired
-    private ClockService clockService;
+    private final ClockService clockService;
 
-    @Autowired
-    private ScheduleService scheduleService;
+    private final ScheduleService scheduleService;
 
-    @Autowired
-    private CollectionService collectionService;
+    private final CollectionService collectionService;
 
     @ApiOperation("打卡")
     @PutMapping(value = "/cancelIn")
@@ -107,66 +103,7 @@ public class LearnController {
         return Result.ok();
     }
 
-    @ApiOperation("学习实词总数")
-    @GetMapping(value = "/totalLearned")
-    public Result getTotalLearned() {
-        Long userId = SecurityUtil.getCurrentUserId();
-        int result = learnService.getTotalLearned(userId);
-        return Result.ok("ok", result);
-    }
-
     /////////////////////////////////////////////////////////////////////////////////////////////////
-
-//    @ApiOperation("获得今日计划")
-//    @GetMapping(value = "/todaySchedule")
-//    public Result<TodayDTO> getTodaySchedule() {
-//        Long userId = SecurityUtil.getCurrentUserId();
-//        // 获得用户当前计划
-//        Schedule schedule = scheduleService.getCurrentSchedule(userId);
-//        TodayDTO todayDTO = new TodayDTO();
-//        List<WordDTO> words = new ArrayList<>();
-//
-//        // 获得用户今日所需复习实词
-//        List<Long> reviewWordIds = learnService.getReviewWordIds(schedule.getId());
-//        reviewWordIds.forEach(id -> {
-//            // 从题库中查询单词
-//            Word word = collectionService.getWordById(id);
-//            WordDTO wordDTO = new WordDTO();
-//            BeanUtils.copyProperties(word, wordDTO);
-//            wordDTO.setStatus(1);
-//            words.add(wordDTO);
-//        });
-//        List<Word> reviews = learnService.getReviewWords(schedule.getId());
-//        words.addAll(reviews);
-//        todayDTO.setReview(words.size());
-//
-//        int hasLearned = learnService.getTodayLearned(schedule.getId()); // 今日已学实词个数
-//        int tobeLearned = schedule.getWordsPerDay() - hasLearned; // 每日计划剩余实词数
-//        int scheduleRemained = scheduleService.getAll(schedule.getId()) - scheduleService.getHasLearned(schedule.getId()); // 计划剩余实词数
-//        int learn = Math.min(tobeLearned, scheduleRemained);
-//        todayDTO.setLearn(learn);
-//
-//        List<Long> learnWordIds = learnService.getWords(schedule.getId(), learn);
-//        learnWordIds.forEach(id -> {
-//            // 从题库中查询单词
-//            Word word = collectionService.getWordById(id);
-//            WordDTO wordDTO = new WordDTO();
-//            BeanUtils.copyProperties(word, wordDTO);
-//            wordDTO.setStatus(1);
-//            words.add(wordDTO);
-//        });
-//        todayDTO.setWords(words);
-//
-//        // 今日已学单词数量
-//        todayDTO.setHasLearned(learnService.getTodayLearned(schedule.getId()));
-//
-//        Book book = collectionService.getBookById(schedule.getBookId());
-//        BookDTO bookDTO = new BookDTO();
-//        BeanUtils.copyProperties(book, bookDTO);
-//        todayDTO.setBook(bookDTO);
-//
-//        return Result.ok("ok", todayDTO);
-//    }
 
     @ApiOperation("获得今日计划")
     @GetMapping(value = "/todaySchedule")
@@ -179,12 +116,42 @@ public class LearnController {
         todayDTO.setReview(learnService.getReviewWordCount(schedule.getId()));
         // 今日已学实词个数
         int hasLearned = learnService.getTodayLearned(schedule.getId());
-        int tobeLearned = schedule.getWordsPerDay() - hasLearned; // 每日计划剩余实词数
+        int tobeLearned = schedule.getWordsPerDay() >= hasLearned ? schedule.getWordsPerDay() - hasLearned : 0; // 每日计划剩余实词数
         int scheduleRemained = scheduleService.getAll(schedule.getId()) - scheduleService.getHasLearned(schedule.getId()); // 计划剩余实词数
         int learn = Math.min(tobeLearned, scheduleRemained);
         todayDTO.setHasLearned(hasLearned);
         todayDTO.setLearn(learn);
 
         return Result.ok("ok", todayDTO);
+    }
+
+    @ApiOperation("获得今日需要新学和复习的实词")
+    @GetMapping(value = "/todayWords")
+    public Result<LRDTO> getTodayWords() {
+        Long userId = SecurityUtil.getCurrentUserId();
+        LRDTO lrdto = new LRDTO();
+        // 获得用户当前计划
+        Schedule schedule = scheduleService.getCurrentSchedule(userId);
+        List<Word> words = new ArrayList<>();
+
+        // 获得用户今日所需复习实词
+        List<Word> reviewWords = learnService.getReviewWords(schedule.getId());
+
+        int hasLearned = learnService.getTodayLearned(schedule.getId());
+        int tobeLearned = schedule.getWordsPerDay() >= hasLearned ? schedule.getWordsPerDay() - hasLearned : 0; // 每日计划剩余实词数
+        int scheduleRemained = scheduleService.getAll(schedule.getId()) - scheduleService.getHasLearned(schedule.getId()); // 计划剩余实词数
+        int learn = Math.min(tobeLearned, scheduleRemained);
+
+        // 获得用户今日所需新学实词
+        List<Word> newWords = learnService.getNewWords(schedule.getId(), learn);
+        reviewWords.addAll(newWords);
+        lrdto.setWords(reviewWords);
+
+        Book book = collectionService.getBookById(schedule.getBookId());
+        BookDTO bookDTO = new BookDTO();
+        BeanUtils.copyProperties(book, bookDTO);
+        lrdto.setBook(bookDTO);
+
+        return Result.ok("ok", lrdto);
     }
 }

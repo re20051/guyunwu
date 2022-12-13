@@ -6,8 +6,19 @@ import com.example.guyunwu.model.entity.Word;
 import java.util.List;
 
 public interface CollectionService {
+
+    /**
+     * 用户收藏实词
+     * @param wordId
+     * @param userId
+     */
     void collectWord(Long wordId, Long userId);
 
+    /**
+     * 用户取消收藏实词
+     * @param wordId
+     * @param userId
+     */
     void cancelWord(Long wordId, Long userId);
 
     /**
@@ -50,4 +61,12 @@ public interface CollectionService {
      * @return
      */
     Word getWordById(Long id);
+
+    /**
+     * 判断一个实词是否已经被
+     * @param wordId
+     * @param userId
+     * @return
+     */
+    Boolean isCollected(Long wordId, Long userId);
 }

@@ -26,13 +26,13 @@ public interface ScheduleRecordRepository extends BaseRepository<ScheduleRecord,
     int countByScheduleIdAndStatusAndDate(Long scheduleId, int status, String date);
 
 
-    @Query(value = "select word_id from schedule_record where schedule_id = ?1 and status = 0 order by word_id limit ?2", nativeQuery = true)
-    List<Long> getWords(Long scheduleId, int learn);
+    @Query(value = "select * from (select word_id from schedule_record where schedule_id = ?1 and status = 0 order by word_id limit ?2) as ids natural join word", nativeQuery = true)
+    List<Object> getNewWords(Long scheduleId, int learn);
 
     @Query(value = "select * from " +
             "(select word_id from schedule_record where schedule_id = ?1 and status = 1 order by word_id) as ids " +
-            "join word on word.word_id = ids.word_id", nativeQuery = true)
-    List<Word> getReviewWords(Long scheduleId);
+            "natural join word", nativeQuery = true)
+    List<Object> getReviewWords(Long scheduleId);
 
     @Query(value = "select count(word_id) from schedule_record where schedule_id = ?1 and status = 1", nativeQuery = true)
     Integer getReviewWordCount(Long scheduleId);

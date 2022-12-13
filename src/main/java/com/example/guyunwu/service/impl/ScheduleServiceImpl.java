@@ -138,7 +138,7 @@ public class ScheduleServiceImpl extends AbstractCrudService<Schedule, Long>  im
         words.forEach(word -> {
             ScheduleRecord scheduleRecord = new ScheduleRecord();
             scheduleRecord.setStatus(0);
-            scheduleRecord.setWordId(word.getId());
+            scheduleRecord.setWordId(word.getWordId());
             scheduleRecord.setScheduleId(scheduleId);
             scheduleRecordRepository.save(scheduleRecord);
         });

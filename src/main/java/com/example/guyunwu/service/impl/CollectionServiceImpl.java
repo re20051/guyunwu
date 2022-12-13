@@ -68,13 +68,13 @@ public class CollectionServiceImpl extends AbstractCrudService<Word, Long> imple
         return bookRepository.getByBookId(bookId);
     }
 
-    /**
-     * 通过id查询到实词
-     * @param id
-     * @return
-     */
     @Override
     public Word getWordById(Long id) {
         return wordRepository.getById(id);
+    }
+
+    @Override
+    public Boolean isCollected(Long wordId, Long userId) {
+        return null;
     }
 }

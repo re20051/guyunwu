@@ -24,21 +24,11 @@ public interface LearnService {
     int getTotalLearned(Long userId);
 
     /**
-     * 获得某个用户待复习实词数
-     * @param scheduleId
-     * @return
-     */
-    int getToBeReviewed(Long scheduleId);
-
-    /**
      * 获得今日已经学习实词数
      * @param scheduleId
      * @return
      */
     int getTodayLearned(Long scheduleId);
-
-
-
 
 
     /**
@@ -47,7 +37,7 @@ public interface LearnService {
      * @param learn
      * @return
      */
-    List<Long> getWords(Long scheduleId, int learn);
+    List<Word> getNewWords(Long scheduleId, int learn);
 
     /**
      * 获得所需复习实词

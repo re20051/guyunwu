@@ -34,7 +34,4 @@ public interface ArticleRepository extends BaseRepository<Article, Long>, JpaSpe
     @Modifying
     @Query(value = "delete from article_like where user_id=?1 and article_id=?2", nativeQuery = true)
     int deleteArticleLike(Long userId, Long articleId);
-
-    @Query(value = "select * from article where category = ?1 order by article_id limit ?2, ?3", nativeQuery = true)
-    List<Article> findAllArticles(String category, int page, int size);
 }

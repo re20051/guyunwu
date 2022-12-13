@@ -66,8 +66,7 @@ public class ArticleController {
         };
         PageRequest pageRequest = PageRequest.of(param.getPage(), param.getSize());
 
-//        List<Article> articles = articleRepository.findAll(specification, pageRequest).getContent();
-        List<Article> articles = articleRepository.findAllArticles(param.getCategory(), param.getPage() * param.getSize(), (param.getPage() + 1) * param.getSize());
+        List<Article> articles = articleRepository.findAll(specification, pageRequest).getContent();
         long l2 = System.currentTimeMillis();
         System.out.println("time1" + (l2 - l1));
         List<ArticleDTO> res = articles.stream().map(this::toDto).collect(Collectors.toList());

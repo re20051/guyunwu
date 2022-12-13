@@ -16,10 +16,13 @@ public class Word {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "word_id")
-    private Long id;
+    private Long wordId;
 
     @Column(name = "book_id", nullable = false)
     private Long bookId;
+
+    @Column(name = "chapter_id", nullable = false)
+    private Long chapterId;
 
     @Column(name = "content",columnDefinition = "varchar(511)", nullable = false)
     private String content;
@@ -37,7 +40,7 @@ public class Word {
     private String answerD;
 
     @Column(name = "correct_answer", nullable = false)
-    private String correctAnswer;
+    private Integer correctAnswer;
 
     @Column(name = "key_word", columnDefinition = "varchar(63)", nullable = false)
     private String keyWord;

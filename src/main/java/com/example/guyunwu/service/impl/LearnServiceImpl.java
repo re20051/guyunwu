@@ -10,6 +10,7 @@ import com.example.guyunwu.service.base.AbstractCrudService;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -52,38 +53,22 @@ public class LearnServiceImpl extends AbstractCrudService<ScheduleRecord, Long> 
         return learnRecordRepository.totalLearned(userId);
     }
 
-    /**
-     * 获得某个用户待复习实词数
-     * @param scheduleId
-     * @return
-     */
-    @Override
-    public int getToBeReviewed(Long scheduleId) {
-        DateFormat dateInstance = DateFormat.getDateInstance();
-        Date date = new Date(); //取时间
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(date);
-        calendar.add(Calendar.DATE, -1);//把日期往后增加一天.整数往后推,负数往前移动
-        date = calendar.getTime(); //这个时间就是日期往后推一天的结果
-        return scheduleRecordRepository.countByScheduleIdAndStatusAndDate(scheduleId, 1, dateInstance.format(date));
-    }
-
     @Override
     public int getTodayLearned(Long scheduleId) {
-        DateFormat dateInstance = DateFormat.getDateInstance();
+        DateFormat dateInstance = new SimpleDateFormat("yyyy-MM-dd");
         return scheduleRecordRepository.countByScheduleIdAndStatusAndDate(scheduleId, 1, dateInstance.format(new Date()));
     }
 
-
-
     @Override
-    public List<Long> getWords(Long scheduleId, int learn) {
-        return scheduleRecordRepository.getWords(scheduleId, learn);
+    public List<Word> getNewWords(Long scheduleId, int learn) {
+        System.out.println(scheduleRecordRepository.getNewWords(scheduleId, learn).toString());
+        return null;
     }
 
     @Override
     public List<Word> getReviewWords(Long scheduleId) {
-        return scheduleRecordRepository.getReviewWords(scheduleId);
+        System.out.println(scheduleRecordRepository.getReviewWords(scheduleId).toString());
+        return null;
     }
 
     @Override
