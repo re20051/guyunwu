@@ -11,22 +11,19 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "learn_record")
-public class LearnRecord extends BaseEntity{
+public class LearnRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "record_id")
     private Long id;
 
-    @Column(name = "schedule_id")
-    private Long scheduleId;
+    @Column(name = "user_id")
+    private Long userId;
 
     @Column(name = "word_id")
     private Long wordId;
 
     @Column(name = "learn_date")
-    private Date learnDate;
-
-    @Column(name = "status")
-    private Integer status;
+    private Date date;
 }

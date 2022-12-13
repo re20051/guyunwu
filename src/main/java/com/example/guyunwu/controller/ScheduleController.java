@@ -6,7 +6,6 @@ import com.example.guyunwu.model.dto.ScheduleDTO;
 import com.example.guyunwu.model.dto.WordDTO;
 import com.example.guyunwu.model.entity.Book;
 import com.example.guyunwu.model.entity.Schedule;
-import com.example.guyunwu.model.entity.ScheduleRecord;
 import com.example.guyunwu.model.entity.Word;
 import com.example.guyunwu.model.param.AddScheduleParam;
 import com.example.guyunwu.model.param.UpdateScheduleParam;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 
 @RestController
@@ -67,19 +65,9 @@ public class ScheduleController {
     public Result<ScheduleDTO> switchSchedule(@RequestBody @Validated AddScheduleParam addScheduleParam) {
         Long userId = SecurityUtil.getCurrentUserId();
         Schedule schedule = scheduleService.switchSchedule(addScheduleParam.getBookId(), userId);
-        // 获得题库
-        List<Word> words = collectionService.getWordsByBookId(schedule.getBookId());
-        // 获得题目状态信息
-        List<WordDTO> wordDTOS = new ArrayList<>();
-        words.forEach(word -> {
-            WordDTO wordDTO = new WordDTO();
-            int status = scheduleService.getWordStatus(schedule.getId(), word.getId());
-            wordDTO.setStatus(status);
-            wordDTOS.add(wordDTO);
-        });
+
         ScheduleDTO scheduleDTO = new ScheduleDTO();
         BeanUtils.copyProperties(schedule, scheduleDTO);
-        scheduleDTO.setWords(wordDTOS);
         return Result.ok("ok", scheduleDTO);
     }
 
@@ -91,18 +79,11 @@ public class ScheduleController {
         Schedule newSchedule = scheduleService.reset(userId);
         // 获得题库
         List<Word> words = collectionService.getWordsByBookId(newSchedule.getBookId());
-        List<WordDTO> wordDTOS = new ArrayList<>();
-        words.forEach(word -> {
-            WordDTO wordDTO = new WordDTO();
-            BeanUtils.copyProperties(word, wordDTO);
-            wordDTO.setStatus(0);
-            wordDTOS.add(wordDTO);
-        });
         // 新建一个学习计划进度表
         scheduleService.addScheduleRecord(words, newSchedule.getId());
         ScheduleDTO scheduleDTO = new ScheduleDTO();
         BeanUtils.copyProperties(newSchedule, scheduleDTO);
-        scheduleDTO.setWords(wordDTOS);
+
         return Result.ok("ok", scheduleDTO);
     }
 
@@ -120,19 +101,9 @@ public class ScheduleController {
         if(schedule == null) {
             return Result.ok("ok", null);
         }
-        // 获得题库
-        List<Word> words = collectionService.getWordsByBookId(schedule.getBookId());
-        // 获得题目状态信息
-        List<WordDTO> wordDTOS = new ArrayList<>();
-        words.forEach(word -> {
-            WordDTO wordDTO = new WordDTO();
-            int status = scheduleService.getWordStatus(schedule.getId(), word.getId());
-            wordDTO.setStatus(status);
-            wordDTOS.add(wordDTO);
-        });
         ScheduleDTO scheduleDTO = new ScheduleDTO();
         BeanUtils.copyProperties(schedule, scheduleDTO);
-        scheduleDTO.setWords(wordDTOS);
+
         return Result.ok("ok", scheduleDTO);
     }
 
@@ -144,7 +115,7 @@ public class ScheduleController {
         // 获得该计划
         Schedule schedule = scheduleService.getScheduleById(scheduleId, userId);
         // 获得书本
-        Book book = collectionService.getBookById(schedule.getBookId());
+        Book book = collectionService.getBookById(1L);
         BookDTO bookDTO = new BookDTO();
         BeanUtils.copyProperties(book, bookDTO);
         // 获得已学词汇数量

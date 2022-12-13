@@ -176,13 +176,12 @@ public class ScheduleServiceImpl extends AbstractCrudService<Schedule, Long>  im
 
     /**
      * 获得已学词汇数量
-     * @param id
-     * @param id
+     * @param scheduleId
      * @return
      */
     @Override
-    public Integer getHasLearned(Long id) {
-        return scheduleRecordRepository.countByScheduleIdAndStatus(id);
+    public Integer getHasLearned(Long scheduleId) {
+        return scheduleRecordRepository.countByScheduleIdAndStatus(scheduleId);
     }
 
     /**

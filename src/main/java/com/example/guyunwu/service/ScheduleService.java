@@ -53,10 +53,10 @@ public interface ScheduleService {
 
     /**
      * 获得已学词汇数量
-     * @param id
+     * @param scheduleId
      * @return
      */
-    Integer getHasLearned(Long id);
+    Integer getHasLearned(Long scheduleId);
 
     /**
      * 获得计划总词汇数量

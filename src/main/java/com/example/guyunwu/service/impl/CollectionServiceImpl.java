@@ -44,7 +44,7 @@ public class CollectionServiceImpl extends AbstractCrudService<Word, Long> imple
     }
 
     @Override
-    public List<Word> getMyWords(Long userId) {
+    public List<Long> getMyWords(Long userId) {
         return null;
     }
 
@@ -66,5 +66,15 @@ public class CollectionServiceImpl extends AbstractCrudService<Word, Long> imple
     @Override
     public Book getBookById(Long bookId) {
         return bookRepository.getById(bookId);
+    }
+
+    /**
+     * 通过id查询到实词
+     * @param id
+     * @return
+     */
+    @Override
+    public Word getWordById(Long id) {
+        return wordRepository.getById(id);
     }
 }

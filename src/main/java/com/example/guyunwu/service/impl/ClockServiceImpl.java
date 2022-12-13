@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class ClockServiceImpl extends AbstractCrudService<ClockRecord, Long> implements ClockService {
@@ -29,11 +30,15 @@ public class ClockServiceImpl extends AbstractCrudService<ClockRecord, Long> imp
 
     @Override
     public void clock(Long userId) {
-        DateFormat dateInstance = DateFormat.getDateInstance();
         ClockRecord clockRecord = new ClockRecord();
         clockRecord.setUserId(userId);
         clockRecord.setDate(new Date());
         clockRecord.setClocked(true);
         clockRepository.save(clockRecord);
+    }
+
+    @Override
+    public List<Date> getMonthRecord(Long userId, Integer year, Integer month) {
+        return clockRepository.getMonthRecord(userId, year, month);
     }
 }

@@ -1,7 +1,6 @@
 package com.example.guyunwu.model.dto;
 
 import lombok.Data;
-import java.util.List;
 
 @Data
 public class ScheduleDTO {
@@ -11,6 +10,4 @@ public class ScheduleDTO {
     private Long bookId;
 
     private Integer wordsPerDay;
-
-    private List<WordDTO> words;
 }

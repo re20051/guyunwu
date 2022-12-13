@@ -7,7 +7,7 @@ public class WordDTO {
 
     private Long id;
 
-    private Long bookId;
+    private BookDTO book;
 
     private String content;
 

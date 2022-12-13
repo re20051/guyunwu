@@ -3,6 +3,7 @@ package com.example.guyunwu.controller;
 import com.example.guyunwu.model.dto.ArticleDTO;
 import com.example.guyunwu.model.dto.AuthorDTO;
 import com.example.guyunwu.model.dto.BookDTO;
+import com.example.guyunwu.model.dto.WordDTO;
 import com.example.guyunwu.model.entity.*;
 import com.example.guyunwu.model.response.Result;
 import com.example.guyunwu.repository.DailySentenceRepository;
@@ -93,9 +94,9 @@ public class CollectionController {
 
     @ApiOperation("我的收藏实词")
     @GetMapping(value = "/word/my")
-    public Result getMyWords() {
-        Long userId = 4L;
-        List<Word> words = collectionService.getMyWords(userId);
+    public Result<List<WordDTO>> getMyWords() {
+        Long userId = SecurityUtil.getCurrentUserId();
+        List<Long> words = collectionService.getMyWords(userId);
 
         return Result.ok();
     }

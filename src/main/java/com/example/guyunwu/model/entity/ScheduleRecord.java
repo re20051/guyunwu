@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -22,6 +23,9 @@ public class ScheduleRecord extends BaseEntity{
 
     @Column(name = "word_id")
     private Long wordId;
+
+    @Column(name = "date")
+    private Date date;
 
     @Column(name = "status")
     private Integer status;
