@@ -3,11 +3,9 @@ package com.example.guyunwu.service.impl;
 import com.example.guyunwu.model.entity.Book;
 import com.example.guyunwu.model.entity.Word;
 import com.example.guyunwu.repository.BookRepository;
-import com.example.guyunwu.repository.ScheduleRepository;
 import com.example.guyunwu.repository.WordRepository;
 import com.example.guyunwu.service.CollectionService;
 import com.example.guyunwu.service.base.AbstractCrudService;
-import lombok.Data;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,8 +42,8 @@ public class CollectionServiceImpl extends AbstractCrudService<Word, Long> imple
     }
 
     @Override
-    public List<Long> getMyWords(Long userId) {
-        return null;
+    public List<Word> getMyWords(Long userId) {
+        return wordRepository.getMyWords(userId);
     }
 
     @Override
@@ -75,6 +73,7 @@ public class CollectionServiceImpl extends AbstractCrudService<Word, Long> imple
 
     @Override
     public Boolean isCollected(Long wordId, Long userId) {
-        return null;
+        Integer isCollected = wordRepository.isWordCollected(wordId, userId);
+        return isCollected == 1;
     }
 }

@@ -61,7 +61,7 @@ public class ScheduleServiceImpl extends AbstractCrudService<Schedule, Long>  im
         }
         Schedule newSchedule = new Schedule();
         // 判断是否是第一本书
-        Schedule oldSchedule = scheduleRepository.findByUserIdAndCurrent(userId, true);
+        Schedule oldSchedule = scheduleRepository.findByUserIdAndCurrent(userId, 1);
         if(oldSchedule == null) {
             newSchedule.setCurrent(true);
         }
@@ -77,7 +77,7 @@ public class ScheduleServiceImpl extends AbstractCrudService<Schedule, Long>  im
     @Transactional
     public Schedule switchSchedule(Long bookId, Long userId) {
         // 原先计划设置为不在学习中
-        Schedule oldSchedule = scheduleRepository.findByUserIdAndCurrent(userId, true);
+        Schedule oldSchedule = scheduleRepository.findByUserIdAndCurrent(userId, 1);
         if(oldSchedule == null) {
             throw new RuntimeException("原计划为空，不可切换");
         }
@@ -97,7 +97,7 @@ public class ScheduleServiceImpl extends AbstractCrudService<Schedule, Long>  im
     @Transactional
     public Schedule reset(Long userId) {
         // 删除原来计划
-        Schedule oldSchedule = scheduleRepository.findByUserIdAndCurrent(userId, true);
+        Schedule oldSchedule = scheduleRepository.findByUserIdAndCurrent(userId, 1);
         if(oldSchedule == null) {
             throw new RuntimeException("没有正在学习的计划，无法重置");
         }
@@ -119,7 +119,7 @@ public class ScheduleServiceImpl extends AbstractCrudService<Schedule, Long>  im
 
     @Override
     public Schedule getCurrentSchedule(Long userId) {
-        return scheduleRepository.findByUserIdAndCurrent(userId, true);
+        return scheduleRepository.findByUserIdAndCurrent(userId, 1);
     }
 
     @Override

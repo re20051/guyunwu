@@ -26,7 +26,7 @@ public interface CollectionService {
      * @param userId
      * @return
      */
-    List<Long> getMyWords(Long userId);
+    List<Word> getMyWords(Long userId);
 
     /**
      * 获得一个用户收藏的书本

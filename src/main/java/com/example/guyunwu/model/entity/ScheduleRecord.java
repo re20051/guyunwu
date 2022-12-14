@@ -25,7 +25,7 @@ public class ScheduleRecord extends BaseEntity{
     private Long wordId;
 
     @Column(name = "date")
-    private Date date;
+    private String date;
 
     @Column(name = "status")
     private Integer status;

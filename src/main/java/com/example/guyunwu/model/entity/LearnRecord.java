@@ -25,5 +25,5 @@ public class LearnRecord {
     private Long wordId;
 
     @Column(name = "learn_date")
-    private Date date;
+    private String date;
 }

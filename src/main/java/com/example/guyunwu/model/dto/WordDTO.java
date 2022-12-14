@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class WordDTO {
 
-    private Long id;
+    private Long wordId;
 
     private BookDTO book;
 
@@ -19,7 +19,7 @@ public class WordDTO {
 
     private String answerD;
 
-    private String correctAnswer;
+    private Integer correctAnswer;
 
     private String keyWord;
 

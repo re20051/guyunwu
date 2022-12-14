@@ -36,7 +36,7 @@ public class ArticleController {
         ArticleDTO articleDTO = new ArticleDTO();
         BeanUtils.copyProperties(article, articleDTO);
         articleDTO.setLikes(articleRepository.countArticleLikesById(article.getId()));
-        userRepository.findByUserId(article.getUserId()).ifPresent(user1 -> {
+        userRepository.findById(article.getUserId()).ifPresent(user1 -> {
             UserDTO userDTO = new UserDTO();
             BeanUtils.copyProperties(user1, userDTO);
             articleDTO.setAuthor(userDTO);
@@ -58,7 +58,6 @@ public class ArticleController {
     @ApiOperation("获取帖子")
     @GetMapping("/list")
     public Result<List<ArticleDTO>> listArticle(ListArticleParam param){
-        long l1 = System.currentTimeMillis();
         Specification<Article> specification = (root, criteriaQuery, criteriaBuilder) -> {
             return criteriaBuilder.and(
                     criteriaBuilder.equal(root.get("category"), param.getCategory())
@@ -67,17 +66,13 @@ public class ArticleController {
         PageRequest pageRequest = PageRequest.of(param.getPage(), param.getSize());
 
         List<Article> articles = articleRepository.findAll(specification, pageRequest).getContent();
-        long l2 = System.currentTimeMillis();
-        System.out.println("time1" + (l2 - l1));
         List<ArticleDTO> res = articles.stream().map(this::toDto).collect(Collectors.toList());
-        long l3 = System.currentTimeMillis();
-        System.out.println("time2" + (l3 - l2));
         return Result.ok("ok", res);
     }
 
     @ApiOperation("发帖子")
     @PostMapping
-    public Result postArticle(@RequestBody @Validated AddArticleParam addArticleParam) {
+    public Result<Object> postArticle(@RequestBody @Validated AddArticleParam addArticleParam) {
         Article article = new Article();
         article.setCoverImage(addArticleParam.getCoverImage());
         article.setTitle(addArticleParam.getTitle());

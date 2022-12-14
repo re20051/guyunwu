@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -93,29 +94,38 @@ public class CollectionController {
     @GetMapping(value = "/word/my")
     public Result<List<WordDTO>> getMyWords() {
         Long userId = SecurityUtil.getCurrentUserId();
-        List<Long> words = collectionService.getMyWords(userId);
+        List<WordDTO> wordDTOS = new ArrayList<>();
+        List<Word> words = collectionService.getMyWords(userId);
 
-        return Result.ok();
+        words.forEach(word -> {
+            WordDTO wordDTO = new WordDTO();
+            BookDTO bookDTO = toBookDto(collectionService.getBookById(word.getBookId()));
+            BeanUtils.copyProperties(word, wordDTO);
+            wordDTO.setBook(bookDTO);
+            wordDTOS.add(wordDTO);
+        });
+
+        return Result.ok("ok", wordDTOS);
     }
 
     @ApiOperation("收藏实词")
     @PostMapping(value = "/word/{wordId:\\d+}")
-    public Result collectWord(@PathVariable Long wordId) {
+    public Result<Object> collectWord(@PathVariable Long wordId) {
         Long userId = SecurityUtil.getCurrentUserId();
         collectionService.collectWord(wordId, userId);
         return Result.ok();
     }
 
     @ApiOperation("取消收藏")
-    @DeleteMapping(value = "/word/cancel/{wordId:\\d+}")
-    public Result cancelWord(@PathVariable Long wordId) {
+    @PutMapping(value = "/word/cancel/{wordId:\\d+}")
+    public Result<Object> cancelWord(@PathVariable Long wordId) {
         Long userId = SecurityUtil.getCurrentUserId();
         collectionService.cancelWord(wordId, userId);
         return Result.ok();
     }
 
     @ApiOperation("判断一个实词是否已经被收藏")
-    @DeleteMapping(value = "/word/isCollected/{wordId:\\d+}")
+    @PutMapping(value = "/word/isCollected/{wordId:\\d+}")
     public Result<Boolean> isCollected(@PathVariable Long wordId) {
         Long userId = SecurityUtil.getCurrentUserId();
         Boolean result = collectionService.isCollected(wordId, userId);

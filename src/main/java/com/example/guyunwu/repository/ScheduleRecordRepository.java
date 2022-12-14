@@ -25,15 +25,14 @@ public interface ScheduleRecordRepository extends BaseRepository<ScheduleRecord,
     @Query(value = "select count(1) from schedule_record where schedule_id = ?1 and status = ?2 and date = ?3", nativeQuery = true)
     int countByScheduleIdAndStatusAndDate(Long scheduleId, int status, String date);
 
+    @Query(value = "select count(word_id) from schedule_record where schedule_id = ?1 and status = 1 and date <> ?2", nativeQuery = true)
+    Integer getReviewWordCount(Long scheduleId, String today);
 
-    @Query(value = "select * from (select word_id from schedule_record where schedule_id = ?1 and status = 0 order by word_id limit ?2) as ids natural join word", nativeQuery = true)
-    List<Object> getNewWords(Long scheduleId, int learn);
+    @Query(value = "select * from schedule_record where word_id = ?1 and schedule_id = ?2", nativeQuery = true)
+    ScheduleRecord findByWordIdAndScheduleId(Long wordId, Long scheduleId);
 
-    @Query(value = "select * from " +
-            "(select word_id from schedule_record where schedule_id = ?1 and status = 1 order by word_id) as ids " +
-            "natural join word", nativeQuery = true)
-    List<Object> getReviewWords(Long scheduleId);
-
-    @Query(value = "select count(word_id) from schedule_record where schedule_id = ?1 and status = 1", nativeQuery = true)
-    Integer getReviewWordCount(Long scheduleId);
+    @Transactional
+    @Query(value = "update schedule_record set status = ?2 where record_id = ?1", nativeQuery = true)
+    @Modifying
+    void updateStatus(Long id, Integer status);
 }

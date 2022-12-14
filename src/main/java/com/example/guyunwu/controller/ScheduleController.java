@@ -68,6 +68,7 @@ public class ScheduleController {
 
         ScheduleDTO scheduleDTO = new ScheduleDTO();
         BeanUtils.copyProperties(schedule, scheduleDTO);
+        System.out.println();
         return Result.ok("ok", scheduleDTO);
     }
 
@@ -98,6 +99,7 @@ public class ScheduleController {
         Long userId = SecurityUtil.getCurrentUserId();
         // 获得当前计划
         Schedule schedule = scheduleService.getCurrentSchedule(userId);
+
         if(schedule == null) {
             return Result.ok("ok", null);
         }
@@ -116,7 +118,7 @@ public class ScheduleController {
         Schedule schedule = scheduleService.getScheduleById(scheduleId, userId);
 
         // 获得书本
-        Book book = collectionService.getBookById(1L);
+        Book book = collectionService.getBookById(schedule.getBookId());
         BookDTO bookDTO = new BookDTO();
         BeanUtils.copyProperties(book, bookDTO);
         // 获得已学词汇数量

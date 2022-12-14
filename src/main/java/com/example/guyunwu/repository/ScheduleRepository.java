@@ -14,7 +14,8 @@ public interface ScheduleRepository extends BaseRepository<Schedule, Long>, JpaS
 
     Optional<Schedule> findByIdAndUserId(Long id, Long userId);
 
-    Schedule findByUserIdAndCurrent(Long userId, boolean b);
+    @Query(value = "select * from schedule where user_id = ?1 and current = ?2", nativeQuery = true)
+    Schedule findByUserIdAndCurrent(Long userId, int current);
 
     Schedule findByBookIdAndUserIdAndRemoved(Long bookId, Long userId, boolean b);
 

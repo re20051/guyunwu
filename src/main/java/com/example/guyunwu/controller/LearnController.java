@@ -1,9 +1,7 @@
 package com.example.guyunwu.controller;
 
-import com.example.guyunwu.model.dto.BookDTO;
-import com.example.guyunwu.model.dto.LRDTO;
-import com.example.guyunwu.model.dto.TodayDTO;
-import com.example.guyunwu.model.dto.WordDTO;
+import com.example.guyunwu.model.dto.*;
+import com.example.guyunwu.model.entity.Author;
 import com.example.guyunwu.model.entity.Book;
 import com.example.guyunwu.model.entity.Schedule;
 import com.example.guyunwu.model.entity.Word;
@@ -41,15 +39,16 @@ public class LearnController {
     private final CollectionService collectionService;
 
     @ApiOperation("打卡")
-    @PutMapping(value = "/cancelIn")
-    public Result<Object> cancelIn() {
-        Long userId = 4L;
+    @PutMapping(value = "/clockIn")
+    public Result<Object> clockIn() {
+        Long userId = SecurityUtil.getCurrentUserId();
         // 获得当前学习计划
         Schedule schedule = scheduleService.getCurrentSchedule(userId);
         // 获得今日计划完成情况
         int todayLearned = learnService.getTodayLearned(schedule.getId());
+        int scheduleRemained = scheduleService.getAll(schedule.getId()) - scheduleService.getHasLearned(schedule.getId()); // 计划剩余实词数
 
-        if(todayLearned >= schedule.getWordsPerDay()) {
+        if(todayLearned >= schedule.getWordsPerDay() || scheduleRemained == 0) {
             clockService.clock(userId);
             return Result.ok();
         }
@@ -66,40 +65,55 @@ public class LearnController {
 
     @ApiOperation("获得某月的打卡记录")
     @PostMapping(value = "/monthRecord")
-    public Result<List<Date>> getMonthRecord(@RequestBody @Validated DateParam dateParam) {
+    public Result<List<Integer>> getMonthRecord(@RequestBody @Validated DateParam dateParam) {
         Long userId = SecurityUtil.getCurrentUserId();
-        List<Date> dates = clockService.getMonthRecord(userId, dateParam.getYear(), dateParam.getMonth());
-        return Result.ok();
+        List<Integer> dates = clockService.getMonthRecord(userId, dateParam);
+        return Result.ok("ok", dates);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
+    @ApiOperation("获得学习总实词数")
+    @GetMapping("/totalLearnedWords")
+    public Result<Integer> totalLearnedWords() {
+        Long userId = SecurityUtil.getCurrentUserId();
+        Integer total = learnService.getTotalLearned(userId);
+        return Result.ok("ok", total);
+    }
+
     @ApiOperation("获得某一天的学习记录")
     @PostMapping(value = "/learnRecord")
-    public Result<List<WordDTO>> getLearnRecord(@RequestBody @Validated DateParam dateParam) {
+    public Result<DayRecordDTO> getLearnRecord(@RequestBody @Validated Date date) {
         Long userId = SecurityUtil.getCurrentUserId();
-        List<Long> wordIds = learnService.getLearnRecord(userId, dateParam);
-        List<WordDTO> words = new ArrayList<>();
+        DayRecordDTO dayRecordDTO = new DayRecordDTO();
 
-        wordIds.forEach(id -> {
-            Word word = collectionService.getWordById(id);
+        List<Word> words = learnService.getLearnedWordsByDay(userId, date);
+        List<WordDTO> wordDTOS = new ArrayList<>();
+        words.forEach(word -> {
             WordDTO wordDTO = new WordDTO();
             BeanUtils.copyProperties(word, wordDTO);
-
-            // 设置书本
             Book book = collectionService.getBookById(word.getBookId());
+
             BookDTO bookDTO = new BookDTO();
             BeanUtils.copyProperties(book, bookDTO);
             wordDTO.setBook(bookDTO);
-            words.add(wordDTO);
+            wordDTOS.add(wordDTO);
         });
-        return Result.ok("ok", words);
+        dayRecordDTO.setWords(wordDTOS);
+
+        // 判断是否打卡成功
+        Boolean isClocked = clockService.isClocked(userId, date);
+        dayRecordDTO.setIsClocked(isClocked);
+        return Result.ok("ok", dayRecordDTO);
     }
 
     @ApiOperation("更新学习记录")
-    @PostMapping(value = "/update")
-    public Result<Object> updateLearnRecord() {
-
+    @PostMapping(value = "/learn")
+    public Result<Object> updateLearnRecord(@RequestBody @Validated Long wordId) {
+        Long userId = SecurityUtil.getCurrentUserId();
+        // 获得用户当前计划
+        Schedule schedule = scheduleService.getCurrentSchedule(userId);
+        learnService.updateStatus(userId, wordId, schedule.getId());
         return Result.ok();
     }
 

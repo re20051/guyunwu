@@ -2,6 +2,7 @@ package com.example.guyunwu.service.impl;
 
 
 import com.example.guyunwu.model.entity.ClockRecord;
+import com.example.guyunwu.model.param.DateParam;
 import com.example.guyunwu.repository.BaseRepository;
 import com.example.guyunwu.repository.ClockRepository;
 import com.example.guyunwu.service.ClockService;
@@ -9,6 +10,7 @@ import com.example.guyunwu.service.base.AbstractCrudService;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class ClockServiceImpl extends AbstractCrudService<ClockRecord, Long> imp
 
     @Override
     public int getClockDays(Long userId) {
-        return clockRepository.countByUserIdAndClocked(userId, true);
+        return clockRepository.countByUserId(userId);
     }
 
     @Override
@@ -34,11 +36,23 @@ public class ClockServiceImpl extends AbstractCrudService<ClockRecord, Long> imp
         clockRecord.setUserId(userId);
         clockRecord.setDate(new Date());
         clockRecord.setClocked(true);
-        clockRepository.save(clockRecord);
+        try {
+            clockRepository.save(clockRecord);
+        } catch (Exception e) {
+            throw new RuntimeException("今日已经打卡过了");
+        }
+
     }
 
     @Override
-    public List<Date> getMonthRecord(Long userId, Integer year, Integer month) {
-        return clockRepository.getMonthRecord(userId, year, month);
+    public List<Integer> getMonthRecord(Long userId, DateParam dateParam) {
+        return clockRepository.getMonthRecord(userId, dateParam.getYear(), dateParam.getMonth());
+    }
+
+    @Override
+    public Boolean isClocked(Long userId, Date date) {
+        DateFormat dateInstance = new SimpleDateFormat("yyyy-MM-dd");
+        Integer result = clockRepository.isClocked(userId, dateInstance.format(date));
+        return result == 1;
     }
 }

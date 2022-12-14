@@ -15,6 +15,4 @@ public class DateParam {
     @Range(min = 1, max = 12, message = "月份必须合法")
     @NotNull(message = "月份不能为空")
     private Integer month;
-
-    private Integer day;
 }

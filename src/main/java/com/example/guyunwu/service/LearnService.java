@@ -8,20 +8,13 @@ import java.util.List;
 
 public interface LearnService {
 
-    /**
-     * 获得某一天所学单词
-     * @param userId
-     * @param dateParam
-     * @return
-     */
-    List<Long> getLearnRecord(Long userId, DateParam dateParam);
 
     /**
      * 获得一个用户至今所学实词总数
      * @param userId
      * @return
      */
-    int getTotalLearned(Long userId);
+    Integer getTotalLearned(Long userId);
 
     /**
      * 获得今日已经学习实词数
@@ -52,4 +45,20 @@ public interface LearnService {
      * @return
      */
     Integer getReviewWordCount(Long scheduleId);
+
+    /**
+     * 获得某一天所学单词
+     * @param userId
+     * @param date
+     * @return
+     */
+    List<Word> getLearnedWordsByDay(Long userId, Date date);
+
+    /**
+     * 更新计划中实词的状态，可能是新学也可能是复习也可能不存在
+     * @param userId
+     * @param wordId
+     * @param scheduleId
+     */
+    void updateStatus(Long userId, Long wordId, Long scheduleId);
 }
