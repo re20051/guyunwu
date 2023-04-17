@@ -1,7 +1,7 @@
 # guyunwu-backend
 安卓项目-古韵屋-后端
 ## 环境
-Java 8+
+Java 7+
 ## 前端
 [guyunwu](https://github.com/Uzemiu/guyunwu)
 ## 数据库
